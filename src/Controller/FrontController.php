@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Controller;
-
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Repository\CategoryRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,8 +20,8 @@ class FrontController extends AbstractController
             ]);
         }
 
-        #[Route('', name: 'homeName')]
-        public function home(categoryRepository $categoryRepository) : response
+        #[Route('', name: 'homeName', methods: ['GET'])]
+        public function home(categoryRepository $categoryRepository, SerializerInterface $serializerinterface) : JsonResponse
         {
 
 
@@ -28,10 +29,32 @@ class FrontController extends AbstractController
 
             dump($categoriesController);
 
+            $categories = $serializerinterface->serialize($categoriesController, 'json');
 
-            return $this->render('/front/home.html.twig', [
-                'titleTwig' => 'Listes des catégories',
-                'categoriesTwig' => $categoriesController,
-            ]);
+            // $array = [];
+
+            // foreach ($categoriesController as $category) {
+            //     $array[] = [
+            //         'id' => $category->getId(),
+            //         'name' => $category->getName(),
+            //         'description' => $category->getDescription(),
+            //     ];
+            // }
+            // return $this->render('/front/home.html.twig', [
+            //     'titleTwig' => 'Listes des catégories',
+            //     'categoriesTwig' => $categoriesController,
+            // ]);
+
+            return new JsonResponse($categories);
+        }
+
+        #[Route('/fiche_category/{id}', name: 'categoryName', methods: ['GET'])]
+        public function category(categoryRepository $categoryRepository,  SerializerInterface $serializerinterface, $id) : JsonResponse
+        {
+            $category = $categoryRepository->find($id);
+
+            $categories = $serializerinterface->serialize($category, 'json');
+
+            return new JsonResponse($categories);
         }
 }
