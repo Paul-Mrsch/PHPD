@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\CategoryRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -18,13 +19,19 @@ class FrontController extends AbstractController
             ]);
         }
 
-        #[Route('/home', name: 'homeName')]
-        public function home() : response
+        #[Route('', name: 'homeName')]
+        public function home(categoryRepository $categoryRepository) : response
         {
-            $message = 'Home';
-            #dd($message);
+
+
+            $categoriesController = $categoryRepository->findAll();
+
+            dump($categoriesController);
+
+
             return $this->render('/front/home.html.twig', [
-                'messageTwig' => $message
+                'titleTwig' => 'Listes des catégories',
+                'categoriesTwig' => $categoriesController,
             ]);
         }
 }

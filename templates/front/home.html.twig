@@ -3,6 +3,13 @@
 {% block title %}Hello FrontController!
 {% endblock %}
 
-{% block stylesheets %}
+{% block body %}
+	<h1 class="text-primary text-center">{{ titleTwig }}</h1>
 
-<link rel="stylesheets href=" {{ asset('/css/style.css') }} {% endblock %} {% block body %} {% set prenomTwig = 'Louis' %} {{prenomTwig}} {{messageTwig}} {% endblock %} {% block h1 %} catalogue {% endblock %}
+	{% for category in categoriesTwig %}
+		<div class="border border-dark p-4 m-4 text-center">
+			<h2>{{ category.name }}</h2>
+			<p class="fst-italic">{{ category.description }}</p>
+		</div>
+	{% endfor %}
+{% endblock %}
