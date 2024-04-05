@@ -34,15 +34,17 @@ class User
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $avatar = null;
 
-    #[ORM\OneToMany(targetEntity: Article::class, mappedBy: 'author')]
+
+    #[ORM\OneToMany(targetEntity: Article::class, mappedBy: 'user')]
     private Collection $articles;
 
-    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'author')]
+    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'user')]
     private Collection $comments;
 
 
     public function __construct()
     {
+
         $this->articles = new ArrayCollection();
         $this->comments = new ArrayCollection();
     }
@@ -124,6 +126,7 @@ class User
         return $this;
     }
 
+
     /**
      * @return Collection<int, Article>
      */
@@ -136,7 +139,7 @@ class User
     {
         if (!$this->articles->contains($article)) {
             $this->articles->add($article);
-            $article->addAuthorId($this);
+            $article->setUser($this);
         }
 
         return $this;
@@ -145,7 +148,10 @@ class User
     public function removeArticle(Article $article): static
     {
         if ($this->articles->removeElement($article)) {
-            $article->removeAuthorId($this);
+            // set the owning side to null (unless already changed)
+            if ($article->getUser() === $this) {
+                $article->setUser(null);
+            }
         }
 
         return $this;
@@ -163,7 +169,7 @@ class User
     {
         if (!$this->comments->contains($comment)) {
             $this->comments->add($comment);
-            $comment->setAuthor($this);
+            $comment->setUser($this);
         }
 
         return $this;
@@ -173,8 +179,8 @@ class User
     {
         if ($this->comments->removeElement($comment)) {
             // set the owning side to null (unless already changed)
-            if ($comment->getAuthor() === $this) {
-                $comment->setAuthor(null);
+            if ($comment->getUser() === $this) {
+                $comment->setUser(null);
             }
         }
 

@@ -81,4 +81,19 @@ class ApiController extends AbstractController
 
         return new JsonResponse(['message' => 'Category updated!'], Response::HTTP_OK);
     }
+
+    #[Route('/api/category/delete/{id}', name: 'api_category_delete', methods: ['DELETE'])]
+    public function delete(EntityManagerInterface $entityManager, CategoryRepository $categoryRepository, $id)
+    {
+        $category = $categoryRepository->find($id);
+
+        if (!$category) {
+            return new JsonResponse(['error' => 'Category not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $entityManager->remove($category);
+        $entityManager->flush();
+
+        return new JsonResponse(['message' => 'Category deleted!'], Response::HTTP_OK);
+    }
 }

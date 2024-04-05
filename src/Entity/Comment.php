@@ -20,11 +20,12 @@ class Comment
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $createdAt = null;
 
+
     #[ORM\ManyToOne(inversedBy: 'comments')]
     private ?Article $article = null;
 
     #[ORM\ManyToOne(inversedBy: 'comments')]
-    private ?User $author = null;
+    private ?User $user = null;
 
     public function getId(): ?int
     {
@@ -55,18 +56,6 @@ class Comment
         return $this;
     }
 
-    public function getArticleId(): ?Article
-    {
-        return $this->article_id;
-    }
-
-    public function setArticleId(?Article $article_id): static
-    {
-        $this->article_id = $article_id;
-
-        return $this;
-    }
-
     public function getArticle(): ?Article
     {
         return $this->article;
@@ -79,14 +68,14 @@ class Comment
         return $this;
     }
 
-    public function getAuthor(): ?User
+    public function getUser(): ?User
     {
-        return $this->author;
+        return $this->user;
     }
 
-    public function setAuthor(?User $author): static
+    public function setUser(?User $user): static
     {
-        $this->author = $author;
+        $this->user = $user;
 
         return $this;
     }

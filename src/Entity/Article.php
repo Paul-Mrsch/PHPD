@@ -2,11 +2,12 @@
 
 namespace App\Entity;
 
-use App\Repository\ArticleRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ArticleRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
 class Article
@@ -17,6 +18,7 @@ class Article
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['test'])]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT)]
@@ -38,11 +40,10 @@ class Article
     private ?string $status = null;
 
     #[ORM\ManyToOne(inversedBy: 'articles')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?User $author = null;
+    private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'articles')]
-    private ?category $category = null;
+    private ?Category $category = null;
 
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'article')]
     private Collection $comments;
@@ -50,7 +51,6 @@ class Article
 
     public function __construct()
     {
-        $this->author_id = new ArrayCollection();
         $this->comments = new ArrayCollection();
     }
 
@@ -143,38 +143,28 @@ class Article
         return $this;
     }
 
-    /**
-     * @return Collection<int, User>
-     */
-    public function getAuthorId(): Collection
+
+
+    public function getUser(): ?User
     {
-        return $this->author_id;
+        return $this->user;
     }
 
-    public function addAuthorId(User $authorId): static
+    public function setUser(?User $user): static
     {
-        if (!$this->author_id->contains($authorId)) {
-            $this->author_id->add($authorId);
-        }
+        $this->user = $user;
 
         return $this;
     }
 
-    public function removeAuthorId(User $authorId): static
+    public function getCategory(): ?Category
     {
-        $this->author_id->removeElement($authorId);
-
-        return $this;
+        return $this->category;
     }
 
-    public function getCategoryId(): ?Category
+    public function setCategory(?Category $category): static
     {
-        return $this->category_id;
-    }
-
-    public function setCategoryId(?Category $category_id): static
-    {
-        $this->category_id = $category_id;
+        $this->category = $category;
 
         return $this;
     }
@@ -191,7 +181,7 @@ class Article
     {
         if (!$this->comments->contains($comment)) {
             $this->comments->add($comment);
-            $comment->setArticleId($this);
+            $comment->setArticle($this);
         }
 
         return $this;
@@ -201,34 +191,10 @@ class Article
     {
         if ($this->comments->removeElement($comment)) {
             // set the owning side to null (unless already changed)
-            if ($comment->getArticleId() === $this) {
-                $comment->setArticleId(null);
+            if ($comment->getArticle() === $this) {
+                $comment->setArticle(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getAuthor(): ?User
-    {
-        return $this->author;
-    }
-
-    public function setAuthor(?User $author): static
-    {
-        $this->author = $author;
-
-        return $this;
-    }
-
-    public function getCategory(): ?category
-    {
-        return $this->category;
-    }
-
-    public function setCategory(?category $category): static
-    {
-        $this->category = $category;
 
         return $this;
     }
