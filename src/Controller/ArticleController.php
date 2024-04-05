@@ -12,6 +12,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Article;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use App\Serializer\CircularReferenceHandler;
+
 
 class ArticleController extends AbstractController
 {
@@ -20,7 +22,7 @@ class ArticleController extends AbstractController
     {
         $articles = $articleRepository->findAll();
 
-        $articlesSerialized = $serializerinterface->serialize($articles, 'json');
+        $articlesSerialized = $serializerinterface->serialize($articles, 'json', ['Groups' => 'api']);
 
         return new JsonResponse($articlesSerialized);
     }
@@ -34,7 +36,7 @@ class ArticleController extends AbstractController
             return new JsonResponse(['error' => 'Article not found'], Response::HTTP_NOT_FOUND);
         }
 
-        $article = $serializerinterface->serialize($article, 'json');
+        $article = $serializerinterface->serialize($article, 'json', ['Groups' => 'api']);
 
         return new JsonResponse($article);
     }

@@ -15,47 +15,47 @@ class Article
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['test'])]
+    #[Groups(['api'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['test'])]
+    #[Groups(['api'])]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(['test'])]
+    #[Groups(['api'])]
     private ?string $content = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Groups(['test'])]
+    #[Groups(['api'])]
     private ?\DateTimeInterface $publisedAt = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    #[Groups(['test'])]
+    #[Groups(['api'])]
     private ?\DateTimeInterface $updateAt = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['test'])]
+    #[Groups(['api'])]
     private ?string $slug = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['test'])]
+    #[Groups(['api'])]
     private ?string $image = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['test'])]
+    #[Groups(['api'])]
     private ?string $status = null;
 
     #[ORM\ManyToOne(inversedBy: 'articles')]
-    #[Groups(['test'])]
+    #[Groups(['api'])]
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'articles')]
-    #[Groups(['test'])]
+    #[Groups(['api'])]
     private ?Category $category = null;
 
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'article')]
-    #[Groups(['test'])]
+    #[Groups(['api'])]
     private Collection $comments;
 
 
