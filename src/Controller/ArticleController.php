@@ -12,22 +12,22 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Article;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use App\Serializer\CircularReferenceHandler;
-
+use App\Serializer\CircularReferenceException;
+use Doctrine\Common\DataFixtures\Exception\CircularReferenceException as ExceptionCircularReferenceException;
 
 class ArticleController extends AbstractController
 {
-    #[Route('/api/articles/index', name: 'app_article')]
+    #[Route('/api/articles/index', name: 'app_article_article', methods: ['GET'])]
     public function index(ArticleRepository $articleRepository,  SerializerInterface $serializerinterface): JsonResponse
     {
         $articles = $articleRepository->findAll();
 
-        $articlesSerialized = $serializerinterface->serialize($articles, 'json', ['Groups' => 'api']);
+        $articlesSerialized = $serializerinterface->serialize($articles, 'json', ['groups' => 'test']);
 
         return new JsonResponse($articlesSerialized);
     }
 
-    #[Route('/api/article/show/{id}', name: 'app_article_show')]
+    #[Route('/api/article/show/{id}', name: 'app_article_show', methods: ['GET'])]
     public function show(ArticleRepository $articleRepository, SerializerInterface $serializerinterface, $id): JsonResponse
     {
         $article = $articleRepository->find($id);
@@ -36,12 +36,12 @@ class ArticleController extends AbstractController
             return new JsonResponse(['error' => 'Article not found'], Response::HTTP_NOT_FOUND);
         }
 
-        $article = $serializerinterface->serialize($article, 'json', ['Groups' => 'api']);
+        $article = $serializerinterface->serialize($article, 'json', ['groups' => 'test']);
 
         return new JsonResponse($article);
     }
 
-    #[Route('/api/article/new', name: 'app_article_new')]
+    #[Route('/api/article/new', name: 'app_article_new', methods: ['POST'])]
     public function new(EntityManagerInterface $entityManager, SerializerInterface $serializerinterface, Request $request, ValidatorInterface $validator)
     {
         $article = $serializerinterface->deserialize($request->getContent(), Article::class, 'json');
@@ -58,7 +58,7 @@ class ArticleController extends AbstractController
         return new JsonResponse(['message' => 'Article created!'], Response::HTTP_CREATED);
     }
 
-    #[Route('/api/article/edit/{id}', name: 'app_article_edit')]
+    #[Route('/api/article/edit/{id}', name: 'app_article_edit', methods: ['PUT'])]
     public function edit(EntityManagerInterface $entityManager, SerializerInterface $serializerinterface, Request $request, ValidatorInterface $validator, $id)
     {
         $article = $entityManager->getRepository(Article::class)->find($id);
@@ -81,7 +81,7 @@ class ArticleController extends AbstractController
         return new JsonResponse(['message' => 'Article updated!'], Response::HTTP_OK);
     }
 
-    #[Route('/api/article/delete/{id}', name: 'app_article_delete')]
+    #[Route('/api/article/delete/{id}', name: 'app_article_delete', methods: ['DELETE'])]
     public function delete(EntityManagerInterface $entityManager, $id)
     {
         $article = $entityManager->getRepository(Article::class)->find($id);
