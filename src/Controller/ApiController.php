@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Category;
-use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ApiController extends AbstractController
 {
@@ -41,13 +41,19 @@ class ApiController extends AbstractController
     }
 
     #[Route('/api/category/new', name: 'api_category_new', methods: ['POST'])]
-    public function new(EntityManagerInterface $entityManager, SerializerInterface $serializerinterface, Request $request)
+    public function new(EntityManagerInterface $entityManager, SerializerInterface $serializerinterface, Request $request, ValidatorInterface $validator)
     {
         $category = $serializerinterface->deserialize($request->getContent(), Category::class, 'json');
 
+        $errors = $validator->validate($category);
+
+        if (count($errors) > 0) {
+            $errorString = (string) $errors;
+            return new JsonResponse(['error' => $errorString], Response::HTTP_BAD_REQUEST);
+        }
         $entityManager->persist($category);
         $entityManager->flush();
 
-        return new JsonResponse(['status' => 'Category created!'], Response::HTTP_CREATED);
+        return new JsonResponse(['message' => 'Category created!'], Response::HTTP_CREATED);
     }
 }
