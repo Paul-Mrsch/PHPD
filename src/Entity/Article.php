@@ -15,6 +15,7 @@ class Article
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['test'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
@@ -22,30 +23,39 @@ class Article
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['test'])]
     private ?string $content = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['test'])]
     private ?\DateTimeInterface $publisedAt = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups(['test'])]
     private ?\DateTimeInterface $updateAt = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['test'])]
     private ?string $slug = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['test'])]
     private ?string $image = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['test'])]
     private ?string $status = null;
 
     #[ORM\ManyToOne(inversedBy: 'articles')]
+    #[Groups(['test'])]
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'articles')]
+    #[Groups(['test'])]
     private ?Category $category = null;
 
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'article')]
+    #[Groups(['test'])]
     private Collection $comments;
 
 
@@ -142,8 +152,6 @@ class Article
 
         return $this;
     }
-
-
 
     public function getUser(): ?User
     {

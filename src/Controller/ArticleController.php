@@ -15,14 +15,14 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ArticleController extends AbstractController
 {
-    #[Route('/api/articles', name: 'app_article')]
-    public function index(ArticleRepository $articleRepository, SerializerInterface $serializerinterface): JsonResponse
+    #[Route('/api/articles/index', name: 'app_article')]
+    public function index(ArticleRepository $articleRepository,  SerializerInterface $serializerinterface): JsonResponse
     {
         $articles = $articleRepository->findAll();
 
-        $articlesSerial = $serializerinterface->serialize($articles, 'json');
+        $articlesSerialized = $serializerinterface->serialize($articles, 'json');
 
-        return new JsonResponse($articlesSerial);
+        return new JsonResponse($articlesSerialized);
     }
 
     #[Route('/api/article/show/{id}', name: 'app_article_show')]

@@ -16,7 +16,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class ApiController extends AbstractController
 {
     #[Route('/api/category/index', name: 'api_category_index', methods: ['GET'])]
-    public function api(categoryRepository $categoryRepository,  SerializerInterface $serializerinterface): JsonResponse
+    public function index(categoryRepository $categoryRepository,  SerializerInterface $serializerinterface): JsonResponse
     {
         $category = $categoryRepository->findAll();
 
