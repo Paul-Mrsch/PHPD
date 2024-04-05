@@ -14,6 +14,8 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/category')]
 class CategoryController extends AbstractController
 {
+
+    // SELECT * FROM category
     #[Route('/', name: 'app_category_index', methods: ['GET'])]
     public function index(CategoryRepository $categoryRepository): Response
     {
@@ -22,6 +24,7 @@ class CategoryController extends AbstractController
         ]);
     }
 
+    // INSERT INTO category (name, description) VALUES ('name', 'description')
     #[Route('/new', name: 'app_category_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -42,6 +45,7 @@ class CategoryController extends AbstractController
         ]);
     }
 
+    // SELECT * FROM category WHERE id = $id
     #[Route('/{id}', name: 'app_category_show', methods: ['GET'])]
     public function show(Category $category): Response
     {
@@ -50,6 +54,7 @@ class CategoryController extends AbstractController
         ]);
     }
 
+    // UPDATE category SET name = 'name', description = 'description' WHERE id = $id
     #[Route('/{id}/edit', name: 'app_category_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Category $category, EntityManagerInterface $entityManager): Response
     {
@@ -68,6 +73,7 @@ class CategoryController extends AbstractController
         ]);
     }
 
+    // DELETE FROM category WHERE id = $id
     #[Route('/{id}', name: 'app_category_delete', methods: ['POST'])]
     public function delete(Request $request, Category $category, EntityManagerInterface $entityManager): Response
     {
