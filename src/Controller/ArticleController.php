@@ -12,8 +12,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Article;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use App\Serializer\CircularReferenceException;
-use Doctrine\Common\DataFixtures\Exception\CircularReferenceException as ExceptionCircularReferenceException;
 
 class ArticleController extends AbstractController
 {
